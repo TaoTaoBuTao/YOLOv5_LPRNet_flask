@@ -1,0 +1,109 @@
+<html>
+<head>
+    <title>车牌识别</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="../static/assets/waifu.min.css?v=1.4.2"/>
+    <!--  <script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>-->
+    <!--  <script>-->
+    <!--    L2Dwidget.init({-->
+    <!--      "model": { "jsonPath":"https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json", "scale": 1, "hHeadPos":0.5, "vHeadPos":0.618 },-->
+    <!--      "display": { "position": "right", "width": 600, "height": 800, "hOffset": 0, "vOffset": 0 },-->
+    <!--      "mobile": { "show": true, "scale": 0.5 },-->
+    <!--      "react": { "opacityDefault": 0.7, "opacityOnHover": 0.2 }-->
+    <!--    });-->
+    <!--  </script>-->
+    <!--
+      其他可选的模型：
+        小帅哥： https://unpkg.com/live2d-widget-model-chitose@1.0.5/assets/chitose.model.json
+        萌娘：https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json
+        白猫：https://unpkg.com/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json
+        黑猫： https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json
+        小可爱（女）：https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json
+        小可爱（男）：https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json
+        初音：https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json
+        圣职者妹妹：https://unpkg.com/live2d-widget-model-z16@1.0.5/assets/z16.model.json
+        茶杯犬：https://cdn.jsdelivr.net/npm/live2d-widget-model-wanko@1.0.5/assets/wanko.model.json
+        绿毛妹妹：https://unpkg.com/live2d-widget-model-tsumiki@1.0.5/assets/tsumiki.model.json
+        金龟子妹妹：https://unpkg.com/live2d-widget-model-unitychan@1.0.5/assets/unitychan.model.json
+        https://unpkg.com/live2d-widget-model-nito@1.0.5/assets/nito.model.json
+        https://unpkg.com/live2d-widget-model-ni-j@1.0.5/assets/ni-j.model.json
+        小阿狸： https://unpkg.com/live2d-widget-model-nico@1.0.5/assets/nico.model.json
+        https://unpkg.com/live2d-widget-model-nietzche@1.0.5/assets/nietzche.model.json
+        https://unpkg.com/live2d-widget-model-nipsilon@1.0.5/assets/nipsilon.model.json
+        女学生： https://unpkg.com/live2d-widget-model-hibiki@1.0.5/assets/hibiki.model.json
+    -->
+
+</head>
+<body bgcolor=＃F0F8FF>
+<center>
+    <h1>车牌识别</h1>
+    <h1>请选择需要检测文件并上传</h1>
+    <form action="/video" enctype='multipart/form-data' method='POST'>
+        <input type="file" name="file">
+        <input type="submit" value="上传">
+    </form>
+    <table>
+        <tr>
+            <td>
+                <form action="/camera" enctype='multipart/form-data' method='POST'>
+                    <input type="submivideo_startt" value="摄像头检测">
+                </form>
+            </td>
+            <td>
+                <form action="/camera_stop" enctype='multipart/form-data' method='POST'>
+                    <input type="submit" value="关闭摄像头">
+                </form>
+            </td>
+            <td>
+                <form action="/download" enctype='multipart/form-data' method='POST'>
+                    <input type="submit" value="下载">
+                </form>
+            </td>
+        </tr>
+    </table>
+    <div>
+        <img src="{{ url_for('video_feed') }}" alt="" , width="640px" , height="480px">
+    </div>
+<!--    &lt;!&ndash; waifu-tips.js 依赖 JQuery 库 &ndash;&gt;-->
+<!--    <script src="../static/assets/jquery.min.js?v=3.3.1"></script>-->
+
+<!--    &lt;!&ndash; 实现拖动效果，需引入 JQuery UI &ndash;&gt;-->
+<!--    <script src="../static/assets/jquery-ui.min.js?v=1.12.1"></script>-->
+
+<!--    <div class="waifu">-->
+<!--        <div class="waifu-tips"></div>-->
+<!--        <canvas id="live2d" class="live2d"></canvas>-->
+<!--        <div class="waifu-tool">-->
+<!--            <span class="fui-home"></span>-->
+<!--            <span class="fui-chat"></span>-->
+<!--            <span class="fui-eye"></span>-->
+<!--            <span class="fui-user"></span>-->
+<!--            <span class="fui-photo"></span>-->
+<!--            <span class="fui-info-circle"></span>-->
+<!--            <span class="fui-cross"></span>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <script src="../static/assets/waifu-tips.min.js?v=1.4.2"></script>-->
+<!--    <script src="../static/assets/live2d.min.js?v=1.0.5"></script>-->
+<!--    <script type="text/javascript">-->
+<!--        /* 可直接修改部分参数 */-->
+<!--        live2d_settings['modelId'] = 1;                  // 默认模型 ID-->
+<!--        live2d_settings['modelTexturesId'] = 87;         // 默认材质 ID-->
+<!--        live2d_settings['modelStorage'] = false;         // 不储存模型 ID-->
+<!--        live2d_settings['canCloseLive2d'] = false;       // 隐藏 关闭看板娘 按钮-->
+<!--        live2d_settings['canTurnToHomePage'] = false;    // 隐藏 返回首页 按钮-->
+<!--        live2d_settings['waifuSize'] = '600x535';        // 看板娘大小-->
+<!--        live2d_settings['waifuTipsSize'] = '570x150';    // 提示框大小-->
+<!--        live2d_settings['waifuFontSize'] = '30px';       // 提示框字体-->
+<!--        live2d_settings['waifuToolFont'] = '36px';       // 工具栏字体-->
+<!--        live2d_settings['waifuToolLine'] = '50px';       // 工具栏行高-->
+<!--        live2d_settings['waifuToolTop'] = '-60px';       // 工具栏顶部边距-->
+<!--        live2d_settings['waifuDraggable'] = 'axis-x';    // 拖拽样式-->
+<!--        /* 在 initModel 前添加 */-->
+<!--        initModel("assets/waifu-tips.json?v=1.4.2")-->
+<!--    </script>-->
+</center>
+</body>
+</html>
+
