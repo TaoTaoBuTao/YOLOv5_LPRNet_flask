@@ -35,6 +35,7 @@ def video_feed():
         return Response(video_gen(Camera(NAME, True)),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
     elif CAMERA_FLAG:
+        print('video_start')
         return Response(video_gen(Camera("0", False)),  # 选择你的摄像头ID
                         mimetype='multipart/x-mixed-replace; boundary=frame')
     else:
@@ -60,7 +61,13 @@ def upload():
 
 @app.route('/camera_stop', methods=['POST'])
 def stop():
-    return Response(mimetype='multipart/x-mixed-replace; boundary=frame')
+    # return Response(mimetype='multipart/x-mixed-replace; boundary=frame')
+    global CAMERA_FLAG, FILE_FLAG
+    CAMERA_FLAG = False
+    FILE_FLAG = False
+    # return Response(mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(video_gen(Camera("1", False)),  # 选择你的摄像头ID
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/download', methods=['POST'])
@@ -69,10 +76,11 @@ def download():
     file_path = 'inference/output'
     file_name = os.path.basename(NAME)
     print(os.path.join(file_path, file_name))
-    if NAME == "0":
-        return send_from_directory(file_path, 'camera_prediction.avi', as_attachment=True)
-    else:
-        return send_from_directory(file_path, file_name, as_attachment=True)
+    # if NAME == "0":
+    #     return send_from_directory(file_path, 'camera_prediction.avi', as_attachment=True)
+    # else:
+    # return send_from_directory(file_path, file_name, as_attachment=True)
+    return send_from_directory(file_path, os.listdir(file_path)[0], as_attachment=True)
 
 
 @app.route('/camera', methods=['POST'])
@@ -80,8 +88,8 @@ def camera_get():
     global CAMERA_FLAG, FILE_FLAG
     CAMERA_FLAG = True
     FILE_FLAG = False
-    # return redirect(url_for('index'))
-    return redirect('/')
+    return redirect(url_for('index'))
+    # return redirect('/')
 
 
 if __name__ == '__main__':

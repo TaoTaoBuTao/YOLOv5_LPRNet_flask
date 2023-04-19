@@ -2,6 +2,7 @@ import argparse
 import sys
 import time
 import os
+import glob
 import cv2
 import torch
 import copy
@@ -268,9 +269,9 @@ class Camera(BaseCamera):
         print(source)
         is_img = Path(source).suffix[1:] in IMG_FORMATS
         is_video = Path(source).suffix[1:] in VID_FORMATS
-        is_camera = Path(source).suffix[1:] == "0"
-
         if is_img:
+            for file in glob.glob("inference/output/*"):
+                os.remove(file)
             print("检测图片")
             img = cv_imread(Camera.video_source)
             if img.shape[-1] == 4:
@@ -282,6 +283,8 @@ class Camera(BaseCamera):
             cv2.imwrite(save_img_path, ori_img)
             yield cv2.imencode('.jpg', ori_img)[1].tobytes()
         if is_video:
+            for file in glob.glob("inference/output/*"):
+                os.remove(file)
             print("检测视频")
             print(source)
             capture = cv2.VideoCapture(source)
@@ -317,7 +320,9 @@ class Camera(BaseCamera):
             out.release()
             cv2.destroyAllWindows()
             print(f"all frame is {frame_count},average fps is {fps_all / frame_count} fps")
-        if is_camera:
+        if source == '0':
+            for file in glob.glob("inference/output/*"):
+                os.remove(file)
             print("摄像头检测")
             capture = cv2.VideoCapture(0)
             fourcc = cv2.VideoWriter_fourcc(*'MP4V')
@@ -328,26 +333,30 @@ class Camera(BaseCamera):
             out = cv2.VideoWriter(save_img_path, fourcc, fps, (width, height))  # 写入视频
             frame_count = 0
             fps_all = 0
-            if capture.isOpened():
-                while True:
-                    t1 = cv2.getTickCount()
-                    frame_count += 1
-                    print(f"第{frame_count} 帧", end=" ")
-                    ret, img = capture.read()
-                    if not ret:
-                        break
-                    dict_list = detect_Recognition_plate(detect_model, img, device, plate_rec_model, img_size,
-                                                         is_color=True)
-                    ori_img = draw_result(img, dict_list)
-                    t2 = cv2.getTickCount()
-                    infer_time = (t2 - t1) / cv2.getTickFrequency()
-                    fps = 1.0 / infer_time
-                    fps_all += fps
-                    str_fps = f'fps:{fps:.4f}'
-                    cv2.putText(ori_img, str_fps, (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-                    out.write(ori_img)
-                    yield cv2.imencode('.jpg', ori_img)[1].tobytes()
+            # if capture.isOpened():
+            while capture.isOpened():
+                t1 = cv2.getTickCount()
+                frame_count += 1
+                print(f"第{frame_count} 帧", end=" ")
+                ret, img = capture.read()
+                if not ret:
+                    break
+                dict_list = detect_Recognition_plate(detect_model, img, device, plate_rec_model, img_size,
+                                                     is_color=True)
+                ori_img = draw_result(img, dict_list)
+                t2 = cv2.getTickCount()
+                infer_time = (t2 - t1) / cv2.getTickFrequency()
+                fps = 1.0 / infer_time
+                fps_all += fps
+                str_fps = f'fps:{fps:.4f}'
+                cv2.putText(ori_img, str_fps, (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                out.write(ori_img)
+                yield cv2.imencode('.jpg', ori_img)[1].tobytes()
             capture.release()
             out.release()
             cv2.destroyAllWindows()
             print(f"all frame is {frame_count},average fps is {fps_all / frame_count} fps")
+        if source == '1':
+            capture = cv2.VideoCapture(0)
+            capture.release()
+            print('stop')
